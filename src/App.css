@@ -56,3 +56,14 @@
 .animate-scoring {
   animation: move-down 0.2s;
 }
+@keyframes animate-expanding-y {
+  0% {
+    margin-top: -100%;
+  }
+  100% {
+    margin-top: 0;
+  }
+}
+.animate-expanding-y {
+  animation: animate-expanding-y 1s forwards;
+}

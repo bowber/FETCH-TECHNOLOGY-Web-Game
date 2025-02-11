@@ -17,12 +17,24 @@ const scoreBoxesInfo = [
 function App() {
   const container = useRef<HTMLDivElement>(null)
   const scoreBoxes = useRef<Array<HTMLDivElement | null>>([])
-  const [scoreBoxHistory, setScoreBoxHistory] = useState<Array<{ value: string, color: string }>>([])
+  const [scoreHistory, setScoreHistory] = useState<Array<{ value: string, color: string, id: number }>>([])
+
+  const addScoreHistory = (scoreBox: { value: string, color: string }) => {
+    setScoreHistory(prev => {
+      const newScore = { ...scoreBox, id: Date.now() }
+      const maxHistory = 10
+      if (prev.length >= maxHistory) {
+        return [newScore, ...prev.slice(0, maxHistory - 1)]
+      }
+      return [newScore, ...prev]
+    })
+  }
+
   useEffect(() => {
     if (container.current === null) return;
     if (scoreBoxes.current.length === 0) return;
     if (scoreBoxes.current.some(scoreBox => scoreBox === null)) return;
-    const world = createWorld(container.current, scoreBoxes.current as HTMLDivElement[]);
+    const world = createWorld(container.current, scoreBoxes.current as HTMLDivElement[], addScoreHistory);
     return world.cleanup;
   }, []);
   return (
@@ -49,7 +61,36 @@ function App() {
             {scoreBox.value}
           </div>
         ))}
-      </div>
+        {/* History */}
+        <div style={{
+          position: 'absolute',
+          transitionDuration: '1s',
+          top: '0',
+          right: '0',
+          color: 'white',
+          borderRadius: '5px',
+          overflow: 'hidden',
+          maxHeight: '25rem'
+        }}>
+          {scoreHistory.map((score) => (
+            <div
+              key={score.id}
+              className='animate-expanding-y'
+              style={{
+                backgroundColor: score.color,
+                padding: '1rem',
+                width: '2rem',
+                borderBottom: '2px solid rgba(0, 0, 0, 1)',
+                color: 'black',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+              }}
+            >
+              {score.value}
+            </div>
+          ))}
+        </div>
+      </div >
     </>
   )
 }

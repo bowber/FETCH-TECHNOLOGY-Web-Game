@@ -17,7 +17,8 @@ const SCOREBOX_CATEGORY = 0b1000;
 
 export const createWorld = (
   container: HTMLDivElement,
-  scoreBoxElems: HTMLDivElement[]
+  scoreBoxElems: HTMLDivElement[],
+  addScoreHistory: (scoreBox: { value: string; color: string }) => void
 ) => {
   // create an engine
   const engine = Engine.create();
@@ -103,7 +104,7 @@ export const createWorld = (
 
   //   Handle Collision
   const handleReddotCollision = (
-    event: IEventCollision<Engine>,
+    _event: IEventCollision<Engine>,
     redDotBody: Body,
     otherBody: Body
   ) => {
@@ -139,6 +140,10 @@ export const createWorld = (
       const scoreBoxElem = scoreBoxElems[scoreBoxIndex];
       if (!scoreBoxElem) return;
       scoreBoxElem.classList.remove("animate-scoring");
+      addScoreHistory({
+        value: scoreBoxElem.innerText,
+        color: scoreBoxElem.style.backgroundColor,
+      });
       setTimeout(() => {
         scoreBoxElem.classList.add("animate-scoring");
       }, 100);
