@@ -66,6 +66,7 @@ export const createWorld = (
     collisionFilter: {
       category: GROUND_CATEGORY,
     },
+    render: { fillStyle: "transparent" },
   });
   const leftBorder = Bodies.rectangle(185, 370, 10, 600, {
     isStatic: true,
